@@ -8,23 +8,21 @@
 #include <algorithm>
 #include <iostream>
 
-const big_integer ZERO = big_integer(0);
-const big_integer ONE = big_integer(1);
+const big_integer ZERO(0);
+const big_integer ONE(1);
 
 big_integer::big_integer() {
-    digits.clear();
     digits.push_back(0);
     sign = 1;
 }
 
 big_integer::big_integer(int a) {
-    digits.clear();
-    digits.push_back(abs(a));
+    digits.push_back(0);
+    digits[0]=(abs(a));
     sign = ((a < 0) ? -1 : 1);
 }
 
 big_integer::big_integer(long long a) {
-    digits.clear();
     if (!a) {
         sign = 1;
         digits.push_back(0);
@@ -44,7 +42,7 @@ big_integer::big_integer(big_integer const &a) {
 }
 
 big_integer::big_integer(std::string const &str) {
-    digits.clear();
+    digits.push_back(0);
     sign = 1;
     int i = 0;
     if (str[0] == '-') {
@@ -54,7 +52,6 @@ big_integer::big_integer(std::string const &str) {
     for (; i<str.length();i++) {
         *this *= mul;
         *this += big_integer((int) (str[i]) - (int) ('0'));
-
     }
     if (str[0] == '-' && !(digits[0] == 0 && digits.size()== 1)) {
         sign = -1;
@@ -73,8 +70,9 @@ big_integer::~big_integer() {
 }
 
 big_integer &big_integer::operator+=(big_integer const &a) {
-    if ((*this) == -a)
+    if ((*this) == -a) {
         return *this = ZERO;
+    }
     if ((*this) ==  ZERO){
         return *this = a;
     }
@@ -155,10 +153,6 @@ big_integer &big_integer::operator*=(big_integer const &a) {
             digits[i] = cur % base;
             carry = cur / base;
         }
-        /*for (int i=0;i<digits.size();i++){
-            std::cout<<digits[i]<<" ";
-        }*/
-        //std::cout<<"\n";
         while (digits.size() > 1 && digits.back() == 0)
             digits.pop_back();
         sign = c.sign;
@@ -175,7 +169,6 @@ big_integer &big_integer::operator*=(big_integer const &a) {
     while (c.digits.size() > 1 && c.digits.back() == 0)
         c.digits.pop_back();
     *this = c;
-
     return *this;
 }
 
@@ -185,7 +178,6 @@ big_integer &big_integer::operator/=(big_integer const &a) {
     div.digits.clear();
     div.sign = sign * a.sign;
     sign = b.sign = 1;
-
     if (b == ONE || b == -ONE) {
         sign = div.sign;
         return *this;
@@ -249,7 +241,7 @@ big_integer &big_integer::operator/=(big_integer const &a) {
         }
         div.digits.push_back(qc);
     }
-    std::reverse(div.digits.begin(), div.digits.end());
+    reverse(div.digits);
     *this = div;
     while (digits.size() > 1 && digits.back() == 0)
         digits.pop_back();
@@ -284,11 +276,11 @@ big_integer &big_integer::operator<<=(int a) {
         }
     }
     digits.resize(digits.size() + t);
-    for (int i = digits.size() - 1; i >= (int) t; i--)
-        digits[i] = digits[i - t];
+    for (int i = digits.size() - 1; i >= (int) t; i--) {
+        digits[i] = digits[i-t];
+    }
     for (int i = t - 1; i >= 0; --i)
         digits[i] = 0;
-
     if (sign < 0) {
         addcode();
     }
@@ -346,12 +338,10 @@ big_integer &big_integer::operator&=(big_integer const &a) {
     char nsign = (sign == -1 && a.sign == -1) ? -1 : 1;
     big_integer b = big_integer(a);
     (b.digits.size() > digits.size()) ? digits.resize(b.digits.size()) : b.digits.resize(digits.size());;
-
     if (sign == -1)
         addcode();
     if (b.sign == -1)
         b.addcode();
-
     for (size_t i = 0; i < digits.size(); ++i)
         digits[i] &= b.digits[i];
     sign = nsign;
@@ -420,13 +410,14 @@ big_integer big_integer::operator+() const {
 
 big_integer big_integer::operator-() const {
     big_integer r(*this);
+    //std::cout<<*(r.digits.n)<<" "<<*(digits.n)<<"o\n";
     if (r != ZERO)
         r.sign *= -1;
     return r;
 }
 
 big_integer &big_integer::operator++() {
-    return *this += 1;
+    return *this += ONE;
 }
 
 big_integer big_integer::operator++(int) {
@@ -436,7 +427,7 @@ big_integer big_integer::operator++(int) {
 }
 
 big_integer &big_integer::operator--() {
-    return *this -= 1;
+    return *this -= ONE;
 }
 
 big_integer big_integer::operator--(int) {
@@ -473,11 +464,11 @@ std::string to_string(big_integer const &a) {
     }
     char sign = a.sign;
     big_integer b = big_integer(a);
-    big_integer divisor = 10;
+    big_integer div(10);
     while (b.digits[b.digits.size() - 1]) {
-        big_integer last_digit = b % divisor;
-        number += char('0' + last_digit.digits[0]);
-        b /= divisor;
+        big_integer last_digit(b % div);
+        number.push_back((char)(last_digit.digits[0])+'0');
+        b /= div;
     }
     if (sign == -1)
         number += '-';
@@ -554,7 +545,8 @@ big_integer big_integer::operator~() const {
 }
 
 void big_integer::addcode() {
-    for (size_t i = 0; i < digits.size(); ++i)
-        digits[i] = ~digits[i] + 1;
+    for (size_t i = 0; i < digits.size(); ++i) {
+        digits[i] = (~digits[i] + 1);
+    }
 }
 
