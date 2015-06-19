@@ -2,7 +2,6 @@
 // Created by Big Z on 17.06.2015.
 //
 
-#include <c++/iostream>
 #include "myvector.h"
 
 
@@ -99,11 +98,17 @@ void myvector::resize(size_t size) {
 }
 
 unsigned int const &myvector::operator[](int i) const {
+    if (i < 0 || i> sz){
+        throw std::out_of_range("Index out of range");
+    }
     if (sz < 2)return n;
     return ((*v)[i]);
 }
 
 unsigned int &myvector::operator[](int i) {
+    if (i < 0 || i> sz){
+        throw std::out_of_range("Index out of range");
+    }
     if (!cpd)
         make_copy();
     if (sz < 2)return n;

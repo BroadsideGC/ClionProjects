@@ -13,7 +13,7 @@ add_executable(big_integer_testing
           gtest/gtest-all.cc
            gtest/gtest.h
           gtest/gtest_main.cc
-            ## main.cpp
+            # main.cpp
                )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++11 -pedantic -O3")
