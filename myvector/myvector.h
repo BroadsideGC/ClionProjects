@@ -37,22 +37,28 @@ struct vector {
     value_type const &operator[](size_t i) const;
 
     iterator begin();
+
     const_iterator begin() const;
+
     iterator end();
+
     const_iterator end() const;
 
     iterator erase(iterator i);
 
     iterator erase(iterator i1, iterator i2);
 
-    iterator insert(iterator i, value_type const & item);
+    iterator insert(iterator i, value_type const &item);
 
 private:
     size_t sz;
     iterator a;
     size_t __size;
+
     void __enlarge();
+
     iterator __reserve(size_t size);
+
     void __copy(vector const &other);
 };
 

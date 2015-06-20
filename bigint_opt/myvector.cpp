@@ -8,12 +8,10 @@
 myvector::myvector() {
     sz = 0;
     n = 0;
-    cpd = 1;
 }
 
 myvector::myvector(size_t size) {
     sz = size;
-    cpd = 1;
     if (sz < 2) {
         n = 0;
     } else {
@@ -23,7 +21,6 @@ myvector::myvector(size_t size) {
 
 myvector::myvector(myvector const &other) {
     sz = other.size();
-    cpd = (sz < 2);
     if (sz < 2) {
         n = other.n;
     } else {
@@ -32,15 +29,15 @@ myvector::myvector(myvector const &other) {
 }
 
 myvector::~myvector() {
-    v.reset();
 }
 
 void myvector::clear() {
-    resize(0);
+    sz = 0;
+    v.reset();
 }
 
 void myvector::push_back(unsigned int item) {
-    if (!cpd)
+    if (!v.unique())
         __make_copy();
     sz++;
     if (sz < 2) {
@@ -57,7 +54,7 @@ void myvector::push_back(unsigned int item) {
 }
 
 void myvector::pop_back() {
-    if (!cpd)
+    if (!v.unique())
         __make_copy();
     sz--;
     if (sz < 1) {
@@ -72,7 +69,7 @@ void myvector::pop_back() {
 }
 
 void myvector::resize(size_t size) {
-    if (!cpd)
+    if (!v.unique())
         __make_copy();
     if (sz == size)return;
     if (size == 0) {
@@ -98,7 +95,7 @@ void myvector::resize(size_t size) {
 }
 
 unsigned int const &myvector::operator[](int i) const {
-    if (i < 0 || i>= sz){
+    if (i < 0 || i >= sz) {
         throw std::out_of_range("Index out of range");
     }
     if (sz < 2)return n;
@@ -106,10 +103,10 @@ unsigned int const &myvector::operator[](int i) const {
 }
 
 unsigned int &myvector::operator[](int i) {
-    if (i < 0 || i>= sz){
+    if (i < 0 || i >= sz) {
         throw std::out_of_range("Index out of range");
     }
-    if (!cpd)
+    if (!v.unique())
         __make_copy();
     if (sz < 2)return n;
     return ((*v)[i]);
@@ -123,22 +120,18 @@ myvector &myvector::operator=(myvector const &other) {
         if (other.size() > 1) {
             sz = other.size();
             v = other.v;
-            cpd = 0;
         } else {
             sz = other.size();
             n = other.n;
-            cpd = 1;
         }
     } else {
         if (other.size() > 1) {
             sz = other.size();
             v = other.v;
-            cpd = 0;
         } else {
             sz = other.size();
             n = other.n;
             v.reset();
-            cpd = 1;
         }
     }
     return *this;
@@ -163,7 +156,6 @@ bool operator==(myvector const &a, myvector const &b) {
 }
 
 void myvector::__make_copy() {
-    cpd = 1;
     if (sz > 1) {
         std::shared_ptr<std::vector<unsigned int>> t = std::make_shared<std::vector<unsigned int>>(*v);
         v = t;

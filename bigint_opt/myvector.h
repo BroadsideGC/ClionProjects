@@ -9,49 +9,59 @@
 #include <algorithm>
 #include <memory>
 
-struct myvector
-{
+struct myvector {
 
 public:
     myvector();
+
     myvector(size_t size);
-    myvector(myvector const& other);
+
+    myvector(myvector const &other);
+
     ~myvector();
+
     void clear();
+
     void push_back(unsigned int item);
+
     void pop_back();
+
     void resize(size_t size);
 
     size_t size() const {
         return sz;
     }
 
-    unsigned int const& operator [] (int i) const;
-    unsigned int& operator [] (int i);
+    unsigned int const &operator[](int i) const;
 
-    myvector& operator = (myvector const& other);
+    unsigned int &operator[](int i);
 
-    unsigned int const& back() const{
+    myvector &operator=(myvector const &other);
+
+    unsigned int const &back() const {
         if (sz < 2) {
             return n;
         }
         return (*v).back();
     }
-    friend bool operator == (myvector const& a, myvector const& b);
-    friend void reverse(myvector& a);
+
+    friend bool operator==(myvector const &a, myvector const &b);
+
+    friend void reverse(myvector &a);
 
 
 private:
     size_t sz;
-    bool cpd;
-    std::shared_ptr<std::vector <unsigned int>> v;
+    std::shared_ptr<std::vector<unsigned int>> v;
     unsigned int n;
+
     void __make_copy();
 };
 
 
-bool operator == (myvector const& a, myvector const& b);
-void reverse(myvector& a);
+bool operator==(myvector const &a, myvector const &b);
+
+void reverse(myvector &a);
 
 
 #endif //BIGINT_MYVECTOR_H

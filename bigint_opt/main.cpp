@@ -4,18 +4,19 @@
 
 #include "big_integer.h"
 #include <ctime>
-#include <vector>
+#include "myvector.h"
 #include <algorithm>
 #include <iostream>
 
 using namespace std;
 
 int main() {
-    big_integer a("10000000000000000000000000000000000000000000000000000");
-    big_integer b("10000000000");
-    /*for (int i=0;i<a.digits.size();i++) {
-        std::cout << a.digits[i]<<" ";
-    }*/
-    std::cout << a / b;
+   myvector a(10);
+    myvector b;
+
+    b = a;
+    a.clear();
+    b[5]=22;
+    std::cout << b[5];
     return 0;
 }
