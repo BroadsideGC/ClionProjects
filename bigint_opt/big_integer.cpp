@@ -217,13 +217,13 @@ big_integer &big_integer::operator/=(big_integer const &a) {
     n = b.digits.size();
     m = digits.size() - n;
     for (long long i = m - 1; i >= 0; i--) {
-        unsigned long long qc = (digits[n + i] * 1ull * base + 1ull * digits[n + i - 1]);
-        qc /= (1ull * (b.digits[n - 1]));
         if (digits.size()==1 && digits[0]==0){
-            qc = 0;
-            div.digits.push_back(qc);
+            div.digits.push_back(0);
             continue;
         }
+        unsigned long long qc = (digits[n + i] * 1ull * base + 1ull * digits[n + i - 1]);
+        qc /= (1ull * (b.digits[n - 1]));
+
         if (qc >= base) {
             i++;
             qc /= base;
@@ -410,7 +410,6 @@ big_integer big_integer::operator+() const {
 
 big_integer big_integer::operator-() const {
     big_integer r(*this);
-    //std::cout<<*(r.digits.n)<<" "<<*(digits.n)<<"o\n";
     if (r != ZERO)
         r.sign *= -1;
     return r;

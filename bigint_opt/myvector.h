@@ -39,13 +39,14 @@ public:
     }
     friend bool operator == (myvector const& a, myvector const& b);
     friend void reverse(myvector& a);
-    void make_copy();
+
 
 private:
     size_t sz;
     bool cpd;
     std::shared_ptr<std::vector <unsigned int>> v;
     unsigned int n;
+    void __make_copy();
 };
 
 

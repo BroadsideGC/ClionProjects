@@ -41,7 +41,7 @@ void myvector::clear() {
 
 void myvector::push_back(unsigned int item) {
     if (!cpd)
-        make_copy();
+        __make_copy();
     sz++;
     if (sz < 2) {
         n = item;
@@ -58,7 +58,7 @@ void myvector::push_back(unsigned int item) {
 
 void myvector::pop_back() {
     if (!cpd)
-        make_copy();
+        __make_copy();
     sz--;
     if (sz < 1) {
         return;
@@ -73,7 +73,7 @@ void myvector::pop_back() {
 
 void myvector::resize(size_t size) {
     if (!cpd)
-        make_copy();
+        __make_copy();
     if (sz == size)return;
     if (size == 0) {
         n = 0;
@@ -98,7 +98,7 @@ void myvector::resize(size_t size) {
 }
 
 unsigned int const &myvector::operator[](int i) const {
-    if (i < 0 || i> sz){
+    if (i < 0 || i>= sz){
         throw std::out_of_range("Index out of range");
     }
     if (sz < 2)return n;
@@ -106,11 +106,11 @@ unsigned int const &myvector::operator[](int i) const {
 }
 
 unsigned int &myvector::operator[](int i) {
-    if (i < 0 || i> sz){
+    if (i < 0 || i>= sz){
         throw std::out_of_range("Index out of range");
     }
     if (!cpd)
-        make_copy();
+        __make_copy();
     if (sz < 2)return n;
     return ((*v)[i]);
 }
@@ -148,7 +148,7 @@ void reverse(myvector &a) {
     if (a.sz < 2) {
         return;
     }
-    a.make_copy();
+    a.__make_copy();
     std::reverse((*a.v).begin(), (*a.v).end());
 }
 
@@ -162,7 +162,7 @@ bool operator==(myvector const &a, myvector const &b) {
     return 1;
 }
 
-void myvector::make_copy() {
+void myvector::__make_copy() {
     cpd = 1;
     if (sz > 1) {
         std::shared_ptr<std::vector<unsigned int>> t = std::make_shared<std::vector<unsigned int>>(*v);
