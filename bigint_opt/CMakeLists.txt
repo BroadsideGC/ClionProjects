@@ -16,6 +16,6 @@ add_executable(big_integer_testing
             # main.cpp
                )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++11 -pedantic -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++11 -pedantic -O3 -march=haswell")
 
 target_link_libraries(big_integer_testing)
