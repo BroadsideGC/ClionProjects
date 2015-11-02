@@ -31,7 +31,6 @@ public:
     size_t size() const {
         return sz;
     }
-
     unsigned int const &operator[](int i) const;
 
     unsigned int &operator[](int i);

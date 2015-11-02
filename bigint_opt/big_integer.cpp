@@ -41,7 +41,7 @@ big_integer::big_integer(big_integer const &a) {
     *this = a;
 }
 
-big_integer::big_integer(std::string const &str) {
+big_integer::big_integer(const std::string &str) {
     digits.push_back(0);
     sign = 1;
     int i = 0;
