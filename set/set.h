@@ -40,24 +40,20 @@ struct set {
         point r;
         point p;
 
-        Node() : i(0), l(nullptr), r(nullptr) { };
+        Node() : i(NULL), l(nullptr), r(nullptr) { };
 
         Node(value_type i, point l, point r) : i(i), l(l), r(r) { };
 
         Node(value_type i) : i(i), l(nullptr), r(nullptr) { };
 
-        ~Node() {
-            l.reset();
-            r.reset();
-            p.reset();
-        };
+        ~Node() {}
 
-        Node &operator=(Node const &other) {
+        /*Node &operator=(Node const &other) {
             i = other.i;
             l = makeptr(*other.l);
             r = makeptr(*other.r);
             return *this;
-        };
+        };*/
     };
 
     point root;
@@ -66,15 +62,15 @@ struct set {
 private :
     size_t __size;
 
-    Node ins(point n, value_type const &x);
+    Node __ins(point n, value_type const &x);
 
-    Node recerase(point n, value_type const &x);
+    point __recerase(point n, value_type const &x);
 
-    value_type minimum(point n);
+    value_type __minimum(point n);
 
-    bool find(point n, value_type const &x);
+    bool __find(point n, value_type const &x);
 
-    void dfs(point n);
+    void __dfs(point n);
 };
 
 

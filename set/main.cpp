@@ -5,19 +5,13 @@ using namespace std;
 
 int main() {
     set a;
-    a.insert("1");
-    a.insert("vanyahuisosi");
-    set b(a);
-    a.insert("hello world");
-    a.insert("sorokinpidor");
-    a.insert("6");
-    a.erase("1");
-    b.insert("a");
-    b.insert("v");
-    b.insert("y");
-    a.erase("y");
+    for (int i=0;i<10000;i++)
+        a.insert(to_string(i));
+    set b = a;
+    for (int i=1;i<9990;i++)
+        b.erase(to_string(i));
     a.print();
-    std::cout<<"\n";
+    cout<<"\n\n";
     b.print();
     return 0;
 }
