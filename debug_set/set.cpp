@@ -2,7 +2,7 @@
 // Created by Big Z on 14.11.2015.
 //
 
-#include <c++/iostream>
+#include <iostream>
 #include "set.h"
 
 set::set() {
@@ -47,58 +47,80 @@ set::iterator set::insert(value_type const &x) {
     return ret;
 }
 
-void set::erase(set::iterator x) {
+set::iterator set::erase(set::iterator x) {
     iterator n = x;
-    //std::cout<<n.it->i;
     n++;
     __sz--;
     if (__sz == 0) {
         __root = __end.it;
-        __begin == __end;
-        return;
+        __begin = __end;
+        return n;
     }
-    if (n.it->e) {
-        x.it->r->p = x.it->p;
-        x.it = x.it->r;
-        return;;
-    }
-    if (x.it->l == nullptr && x.it->r == nullptr) {
+    if (x.it->l == nullptr && (x.it->r == nullptr || x.it->r->e)) {
         if (x == __begin) {
             __begin++;
         }
         if (x.it->p->r == x.it) {
-            x.it->p->r = nullptr;
+            x.it->p->r = x.it->r;
         } else {
             x.it->p->l = nullptr;
         }
-        return;
+
+        return n;
     }
-    if (x.it->l == nullptr && x.it->r != nullptr) {
+    if (x.it->l == nullptr && x.it->r != nullptr && !x.it->r->e) {
         if (x == __begin) {
             __begin++;
         }
-        x.it->p->r->p = x.it->p;
-        x.it->p->r = x.it->r;
-        //x.it = nullptr;
-        //x = nullptr;
-        return;
+
+        if (x.it->p != nullptr) {
+            if (x.it->p->l == x.it) {
+                x.it->p->l = x.it->r;
+            } else {
+                x.it->p->r = x.it->r;
+            }
+        }else {
+            __root = x.it->r;
+        }
+        x.it->r->p = x.it->p;
+        return n;
     }
-    if (x.it->l != nullptr && x.it->r == nullptr) {
+    if (x.it->l != nullptr && (x.it->r == nullptr || x.it->r->e)) {
+        iterator p = x;
+        if (n == __end && x != begin()){
+            p--;
+        }
         if (x == __begin) {
             __begin++;
         }
-        x.it->p->l->p = x.it->p;
-        x.it->p->l = x.it->l;
-        //x.it = nullptr;
-        //x = nullptr;
-        return;
+        if (x.it->p != nullptr) {
+            if (x.it->p->l == x.it) {
+                x.it->p->l = x.it->l;
+            } else {
+                x.it->p->r = x.it->l;
+            }
+        }else{
+            __root = x.it->l;
+        }
+        x.it->l->p = x.it->p;
+        p.it->r=__end.it;
+        return n;
     }
     x.it->i = n.it->i;
-    //;
-    n.it->r->p = n.it->p;
-    n.it->p->r = n.it->r;
+    if (n.it->r != nullptr && !n.it->e) {
+        n.it->r->p = n.it->p;
+    }
+    if (n.it->p != nullptr) {
+        if (n.it->p->l == n.it) {
+            n.it->p->l = n.it->r;
+        } else {
+            n.it->p->r = n.it->r;
+        }
+    } else{
+        __root = n.it->l;
+    }
 
-    return;
+    return n;
 }
 
 set::iterator set::find(value_type const &x) {
@@ -123,7 +145,7 @@ point set::__ins(point n, value_type const &x, point p = nullptr) {
         return makeptr(Node(x, nullptr, nullptr, p));
     }
     if (n->e) {
-        return makeptr(Node(x, nullptr, __end.it, p));
+        return __end.it->p = makeptr(Node(x, nullptr, __end.it, p));
     }
     if (x < n->i) {
         n->l = __ins(n->l, x, n);

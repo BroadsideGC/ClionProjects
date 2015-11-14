@@ -32,7 +32,7 @@ struct set {
 
     iterator insert(value_type const &x);
 
-    void erase(iterator x);
+    iterator erase(iterator x);
 
     iterator find(value_type const &x);
 
@@ -94,8 +94,7 @@ struct set {
 
         iterator(value_type k, int *lst, bool e=0) : it(makeptr(k,e)), cur(lst) { }
 
-        ~get(){
-        };
+        ~iterator(){};
         point get() {
             return it;
         }
