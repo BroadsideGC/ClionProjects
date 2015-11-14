@@ -9,7 +9,7 @@ set::set() {
     mrk = new int();
 
     __begin = iterator(-1, mrk, 1);
-    __last = __end = __begin;
+    __end = __begin;
     __root = __end.it;
     __sz = 0;
 }
@@ -19,7 +19,7 @@ set::set(set const &other) {
     __sz = other.__sz;
     iterator it = other.__begin;
     __begin = iterator(0, mrk, 1);
-    __last = __end = __begin;
+    __end = __begin;
     __root = __end.it;
     for (int i = 0; i < __sz; i++) {
         insert(*it);;
@@ -41,8 +41,7 @@ set::iterator set::insert(value_type const &x) {
     iterator ret = find(x);
     if (__sz == 1 || x < __begin.it->i) {
         __begin = ret;
-    }
-    /*if (__sz==1||x> __begin.it->i) {
+    }/*else if (x> __begin.it->i) {
         __last.it->r = ret;
     }*/
     return ret;
@@ -50,6 +49,7 @@ set::iterator set::insert(value_type const &x) {
 
 void set::erase(set::iterator x) {
     iterator n = x;
+    //std::cout<<n.it->i;
     n++;
     __sz--;
     if (__sz == 0) {
@@ -57,7 +57,8 @@ void set::erase(set::iterator x) {
         __begin == __end;
         return;
     }
-    if (n.it->e){
+    if (n.it->e) {
+        x.it->r->p = x.it->p;
         x.it = x.it->r;
         return;;
     }
@@ -76,6 +77,7 @@ void set::erase(set::iterator x) {
         if (x == __begin) {
             __begin++;
         }
+        x.it->p->r->p = x.it->p;
         x.it->p->r = x.it->r;
         //x.it = nullptr;
         //x = nullptr;
@@ -85,14 +87,17 @@ void set::erase(set::iterator x) {
         if (x == __begin) {
             __begin++;
         }
+        x.it->p->l->p = x.it->p;
         x.it->p->l = x.it->l;
         //x.it = nullptr;
         //x = nullptr;
         return;
     }
     x.it->i = n.it->i;
-    //std::cout<<n.it->i;;
+    //;
+    n.it->r->p = n.it->p;
     n.it->p->r = n.it->r;
+
     return;
 }
 

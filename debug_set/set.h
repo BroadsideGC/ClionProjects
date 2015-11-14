@@ -74,8 +74,10 @@ struct set {
 
         /*Node &operator=(Node const &other) {
             i = other.i;
-            l = makeptr(*other.l);
-            r = makeptr(*other.r);
+            l = other.l;
+            r = other.r;
+            p =
+            e = other.e;
             return *this;
         };*/
     };
@@ -92,6 +94,8 @@ struct set {
 
         iterator(value_type k, int *lst, bool e=0) : it(makeptr(k,e)), cur(lst) { }
 
+        ~get(){
+        };
         point get() {
             return it;
         }
@@ -180,12 +184,13 @@ private:
     size_t __sz;
     iterator __begin;
     iterator __end;
-    iterator __last;
     point __root;
 
     point __ins(point n, value_type const &x, point p);
 
     point __find(point n, value_type const &x);
+
+    //iterator __
 
     void __clear(point n);
 

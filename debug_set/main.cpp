@@ -4,20 +4,22 @@ using namespace std;
 
 int main() {
     set s;
-    s.insert(1);
-    s.insert(0);
-    s.insert(2);
+    for (int i=0;i<1000;i++){
+        //if (i!=7) {
+            s.insert(i);
+       // }
+    }
    // s.insert(7);
-    //cout<<s.size()<<" "<<*s.begin()<<"\n";
-    set::iterator it1 = s.find(2);
+    ///cout<<s.size()<<" "<<*s.begin()<<"\n";
+    set::iterator it1 = s.find(0);
     //it1++;
-    cout<<(it1.it->r == nullptr);
-    s.erase(s.find(1));
+    //cout<<*it1;
     //it1++;
-    //s.erase(s.find(16));
+    for (int i=0;i<10;i++){
+        s.erase(s.find(i));
+    }
    // s.clear();
     cout<<s.size()<<"\n";
-
     for (set::iterator it = s.begin();it!=s.end();it++){
         printf("%d ", *it);
     }
