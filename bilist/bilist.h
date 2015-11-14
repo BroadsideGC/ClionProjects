@@ -132,6 +132,7 @@ private:
     size_t __sz;
     iterator __begin;
     iterator __end;
+    iterator
 };
 
 
