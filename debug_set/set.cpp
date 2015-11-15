@@ -6,19 +6,16 @@
 #include "set.h"
 
 set::set() {
-    mrk = new int();
-
-    __begin = iterator(-1, mrk, 1);
+    __begin = iterator(-1, this, 1);
     __end = __begin;
     __root = __end.it;
     __sz = 0;
 }
 
 set::set(set const &other) {
-    mrk = new int();
     __sz = other.__sz;
     iterator it = other.__begin;
-    __begin = iterator(0, mrk, 1);
+    __begin = iterator(0, this, 1);
     __end = __begin;
     __root = __end.it;
     for (int i = 0; i < __sz; i++) {
@@ -41,13 +38,13 @@ set::iterator set::insert(value_type const &x) {
     iterator ret = find(x);
     if (__sz == 1 || x < __begin.it->i) {
         __begin = ret;
-    }/*else if (x> __begin.it->i) {
-        __last.it->r = ret;
-    }*/
+    }
     return ret;
 }
 
 set::iterator set::erase(set::iterator x) {
+    assert(x != __end && "End iterator");
+    assert(x.cur == this && x.it != nullptr && "Invalid iterator");
     iterator n = x;
     n++;
     __sz--;
@@ -79,7 +76,7 @@ set::iterator set::erase(set::iterator x) {
             } else {
                 x.it->p->r = x.it->r;
             }
-        }else {
+        } else {
             __root = x.it->r;
         }
         x.it->r->p = x.it->p;
@@ -87,7 +84,7 @@ set::iterator set::erase(set::iterator x) {
     }
     if (x.it->l != nullptr && (x.it->r == nullptr || x.it->r->e)) {
         iterator p = x;
-        if (n == __end && x != begin()){
+        if (n == __end && x != begin()) {
             p--;
         }
         if (x == __begin) {
@@ -99,11 +96,11 @@ set::iterator set::erase(set::iterator x) {
             } else {
                 x.it->p->r = x.it->l;
             }
-        }else{
+        } else {
             __root = x.it->l;
         }
         x.it->l->p = x.it->p;
-        p.it->r=__end.it;
+        p.it->r = __end.it;
         return n;
     }
     x.it->i = n.it->i;
@@ -116,7 +113,7 @@ set::iterator set::erase(set::iterator x) {
         } else {
             n.it->p->r = n.it->r;
         }
-    } else{
+    } else {
         __root = n.it->l;
     }
 
@@ -125,7 +122,7 @@ set::iterator set::erase(set::iterator x) {
 
 set::iterator set::find(value_type const &x) {
     point ret = __find(__root, x);
-    return (ret == nullptr ? __end : iterator(ret, mrk));
+    return (ret == nullptr ? __end : iterator(ret, this));
 }
 
 void set::print() {
