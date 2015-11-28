@@ -5,139 +5,161 @@
 #include "myvector.h"
 
 vector::vector() {
-    sz = 0;
+    __sz = 0;
     __size = 2;
-    a = __reserve(2);
+    __a = __reserve(2);
 }
 
 vector::vector(vector const &other) {
-    sz = other.size();
-    __size = sz;
+    __a = __reserve(1);
+    __sz = other.size();
+    __size = __sz;
     __copy(other);
 }
 
+vector &vector::operator=(vector const &other) {
+    __sz = other.size();
+    __size = __sz;
+    __copy(other);
+    return *this;
+}
+
 vector::~vector() {
-    for (int i= 0;i<sz;i++){
-        (a+i)->~basic_string();
+    for (int i = 0; i < __sz; i++) {
+        (__a + i)->~basic_string();
     }
-    operator delete(a);
+    operator delete(__a);
 }
 
 void vector::clear() {
-    sz = 0;
+    __sz = 0;
+    iterator tmp = __reserve(2);
+    operator delete(__a);
+    __a = tmp;
 }
 
 void vector::push_back(value_type item) {
-    if (sz == __size) {
+    if (__sz == __size) {
         __enlarge();
     }
     try {
-        new((void *) (a + sz)) value_type(item);
-        sz++;
-    }catch(...){
-        (a+sz)->~basic_string();
+        new((void *) (__a + __sz)) value_type(item);
+        __sz++;
+    } catch (...) {
+        (__a + __sz)->~basic_string();
+        throw;
     }
 }
 
 void vector::pop_back() {
-    sz--;
-    iterator t=a+sz;
+    __sz--;
+    iterator t = __a + __sz;
     t->~basic_string();
 }
 
 value_type &vector::back() {
-    return *(begin() + sz - 1);
+    return *(begin() + __sz - 1);
 }
 
 value_type const &vector::back() const {
-    return *(begin() + sz - 1);
+    return *(begin() + __sz - 1);
 }
 
 size_t vector::size() const {
-    return sz;
+    return __sz;
 }
 
 value_type &vector::operator[](size_t i) {
-    return *(a + i);
+    return *(__a + i);
 }
 
 value_type const &vector::operator[](size_t i) const {
-    return *(a + i);
+    return *(__a + i);
 }
 
 iterator vector::begin() {
-    return a;
+    return __a;
 }
 
 const_iterator vector::begin() const {
-    return a;
+    return __a;
 }
 
 iterator vector::end() {
-    return a + sz;
+    return __a + __sz;
 }
 
 const_iterator vector::end() const {
-    return a + sz;
+    return __a + __sz;
 }
 
 iterator vector::erase(iterator i) {
     iterator tmp = __reserve(__size);;
     size_t r = 0;
+    iterator ret = end();
     try {
-        for (int j = 0; j < sz; j++) {
-            if (a + j != i) {
-                new((void *) (tmp + r)) value_type(*(a + j));
+        for (size_t j = 0; j < __sz; j++) {
+            if (__a + j != i) {
+                new((void *) (tmp + r)) value_type(*(__a + j));
                 r++;
             }
         }
-        operator delete(a);
-        a = tmp;
-        sz--;
-    }catch(...){
-        for (int j=0;j<=r;j++){
-            (tmp+j)->~basic_string();
+        ret = tmp + (i - __a);
+        operator delete(__a);
+        __a = tmp;
+        __sz--;
+
+    } catch (...) {
+        for (int j = 0; j <= r; j++) {
+            (tmp + j)->~basic_string();
         }
         operator delete(tmp);
+        throw;
     }
-    return i;
+    return ret;
 }
 
 iterator vector::erase(iterator i1, iterator i2) {
     ptrdiff_t diff = (i2 - i1);
     iterator tmp = __reserve(__size);;
     size_t r = 0;
+    iterator ret = end();
     try {
-        for (int i = 0; i < sz; i++) {
-            if (a + i < i1 || a + i >= i2) {
-                new((void *) (tmp + r)) value_type(*(a + i));
+        for (size_t i = 0; i < __sz; i++) {
+            if (__a + i < i1 || __a + i >= i2) {
+                new((void *) (tmp + r)) value_type(*(__a + i));
                 r++;
             }
         }
-        operator delete(a);
-        a = tmp;
-        sz -= diff;
-    }catch(...){
-        for (int i=0;i<=r;i++){
-            (tmp+i)->~basic_string();
+        ret = tmp + (i2 - __a);
+        operator delete(__a);
+        __a = tmp;
+        __sz -= diff;
+    } catch (...) {
+        for (size_t i = 0; i <= r; i++) {
+            (tmp + i)->~basic_string();
         }
-        operator delete (tmp);
+        operator delete(tmp);
+        throw;
     }
     return i2;
 }
 
 iterator vector::insert(iterator i, value_type const &item) {
+    ptrdiff_t diff = (i - __a);
     push_back(item);
-    size_t r=0;
+    i = __a + diff;
+    size_t r = 0;
     try {
-        for (iterator j = a + sz - 1; j != i; j--) {
+        for (iterator j = __a + __sz - 1; j != i; j--) {
             std::swap((*j), *(j - 1));
             r++;
         }
-    } catch(...){
-        for (iterator j = a + sz - 1 - r; j != a+sz; j++) {
+    } catch (...) {
+        for (iterator j = __a + __sz - 1 - r; j != __a + __sz; j++) {
             std::swap((*j), *(j - 1));
         }
+        throw;
     }
     return i;
 }
@@ -147,38 +169,40 @@ iterator vector::__reserve(size_t size) {
 }
 
 void vector::__copy(vector const &other) {
-    iterator tmp = __reserve(other.sz);
-    size_t r =0;
+    iterator tmp = __reserve(other.__sz);
+    size_t r = 0;
     try {
         for (int i = 0; i < other.size(); i++) {
             new((void *) (tmp + i)) value_type(other[i]);
             r++;
         }
-        operator delete(a);
-        a = tmp;
-    } catch(...){
-        for (int i=0;i<=r;i++){
-            (tmp+i)->~basic_string();
+        operator delete(__a);
+        __a = tmp;
+    } catch (...) {
+        for (int i = 0; i <= r; i++) {
+            (tmp + i)->~basic_string();
         }
-        operator delete (tmp);
+        operator delete(tmp);
+        throw;
     }
 }
 
 void vector::__enlarge() {
     iterator tmp = __reserve(__size * 2);
-    size_t r=0;
+    size_t r = 0;
     try {
-        for (int i = 0; i < sz; i++) {
-            new((void *) (tmp + i)) value_type(*(a + i));
+        for (int i = 0; i < __sz; i++) {
+            new((void *) (tmp + i)) value_type(*(__a + i));
             r++;
         }
-        operator delete(a);
-        a = tmp;
+        operator delete(__a);
+        __a = tmp;
         __size *= 2;
-    }catch(...){
-        for (int i=0;i<=r;i++){
-            (tmp+i)->~basic_string();
+    } catch (...) {
+        for (int i = 0; i <= r; i++) {
+            (tmp + i)->~basic_string();
         }
         operator delete(tmp);
+        throw;
     }
 }

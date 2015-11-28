@@ -51,8 +51,8 @@ struct vector {
     iterator insert(iterator i, value_type const &item);
 
 private:
-    size_t sz;
-    iterator a;
+    size_t __sz;
+    iterator __a;
     size_t __size;
 
     void __enlarge();
