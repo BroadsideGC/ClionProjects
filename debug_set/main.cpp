@@ -14,7 +14,7 @@ int main() {
             a.push_back(i);
        // }
     }
-   random_shuffle(a.begin(), a.end());
+  // random_shuffle(a.begin(), a.end());
     for (int i=0;i<2000;i++){
         //if (i!=7) {
         s.insert(a[i]);
