@@ -6,7 +6,6 @@
 #define BIG_INTEGER_H
 
 #include <string>
-#include <vector>
 #include "myvector.h"
 
 struct big_integer {

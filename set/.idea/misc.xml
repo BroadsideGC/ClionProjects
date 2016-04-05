@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="CMakeWorkspace" PROJECT_DIR="C:\Users\Big Z\ClionProjects\set" />
-  <component name="ProjectRootManager" version="2" />
+  <component name="CMakeWorkspace" PROJECT_DIR="C:/Users/Big Z/ClionProjects/set" />
+  <component name="CidrRootsConfiguration">
+    <sourceRoots />
+    <libraryRoots />
+    <excludeRoots />
+  </component>
 </project>
